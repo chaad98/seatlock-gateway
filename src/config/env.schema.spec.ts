@@ -27,7 +27,7 @@ describe('envSchema', () => {
     expect(result.error?.issues[0]?.path).toEqual(['PORT']);
   });
 
-  it.only('rejects a WEB_ORIGIN that is not a URL and names WEB_ORIGIN', () => {
+  it('rejects a WEB_ORIGIN that is not a URL and names WEB_ORIGIN', () => {
     const result = envSchema.safeParse({ WEB_ORIGIN: 'not-a-url' });
 
     expect(result.success).toBe(false);
