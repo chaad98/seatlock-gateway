@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module.js';
 import { ObserveInstrument } from './observe.js';
 import type { Env } from './config/env.schema.js';
+import { setupApp } from './app.setup.js';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestNodeApplication>(
@@ -17,7 +18,7 @@ async function bootstrap() {
   const port = config.get('PORT', { infer: true });
   const host = config.get('HOST', { infer: true });
 
-  app.enableShutdownHooks();
+  setupApp(app);
   await app.listen(port, host);
 }
 

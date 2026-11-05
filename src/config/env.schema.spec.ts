@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { envSchema } from './env.schema.js';
 
 describe('envSchema', () => {
-  it('uses safe deafults when nothing is set', () => {
+  it('uses safe defaults when nothing is set', () => {
     const result = envSchema.safeParse({});
 
     expect(result.success).toBe(true);
@@ -10,6 +10,7 @@ describe('envSchema', () => {
       NODE_ENV: 'development',
       HOST: '127.0.0.1',
       PORT: 4000,
+      WEB_ORIGIN: 'http://localhost:3000',
     });
   });
 
@@ -24,5 +25,12 @@ describe('envSchema', () => {
 
     expect(result.success).toBe(false);
     expect(result.error?.issues[0]?.path).toEqual(['PORT']);
+  });
+
+  it.only('rejects a WEB_ORIGIN that is not a URL and names WEB_ORIGIN', () => {
+    const result = envSchema.safeParse({ WEB_ORIGIN: 'not-a-url' });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0]?.path).toEqual(['WEB_ORIGIN']);
   });
 });

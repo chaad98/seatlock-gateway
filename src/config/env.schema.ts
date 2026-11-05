@@ -6,6 +6,7 @@ export const envSchema = z.object({
     .default('development'),
   HOST: z.string().min(1).default('127.0.0.1'),
   PORT: z.coerce.number().int().min(1).max(65535).default(4000),
+  WEB_ORIGIN: z.url().default('http://localhost:3000'),
 });
 
 export type Env = z.infer<typeof envSchema>;
