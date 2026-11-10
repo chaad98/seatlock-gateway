@@ -1,13 +1,13 @@
 # 01 · Gateway skeleton
-Repos: backend:gateway   Brief: [SeatLock MVP](../../../seatlock-platform/docs/briefs/2026-11-03-seatlock-mvp.md)   Plan: [01 gateway skeleton](../../../seatlock-platform/docs/plans/2026-11-04-01-gateway-skeleton.md)   Date: 2026-11-05
+Repos: backend:gateway   Brief: [SeatLock MVP](https://github.com/chaad98/seatlock-platform/blob/main/docs/briefs/2026-11-03-seatlock-mvp.md)   Plan: [01 gateway skeleton](https://github.com/chaad98/seatlock-platform/blob/main/docs/plans/2026-11-04-01-gateway-skeleton.md)   Date: 2026-11-05
 
 ## What we built
 A NestJS 12 app on port 4000 that answers `GET /health` with `{"status":"ok"}`. It refuses to start if its settings are wrong, and every response carries security headers and a strict CORS rule. There's no login, NATS or database yet; later features build on this.
 
 ## Why it's built this way
 - **One public door.** The gateway is the only service the internet can reach. The other services only talk over NATS. So security basics (headers, CORS, no stack traces) live here first.
-- **NodeAdapter, not Express** ([ADR 0002](../../../seatlock-platform/docs/adr/0002-node-http-adapter.md)). Fewer packages, and Node's own HTTP server is enough for a gateway.
-- **ESM and Vitest** ([ADR 0001](../../../seatlock-platform/docs/adr/0001-esm-and-vitest.md)). That's why every relative import ends in `.js`.
+- **NodeAdapter, not Express** ([ADR 0002](https://github.com/chaad98/seatlock-platform/blob/main/docs/adr/0002-node-http-adapter.md)). Fewer packages, and Node's own HTTP server is enough for a gateway.
+- **ESM and Vitest** ([ADR 0001](https://github.com/chaad98/seatlock-platform/blob/main/docs/adr/0001-esm-and-vitest.md)). That's why every relative import ends in `.js`.
 - **Fail fast on config.** A wrong `PORT` should stop the app at boot with a clear message, not break something an hour later.
 
 ## How a request flows
