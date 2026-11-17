@@ -85,7 +85,7 @@ export function setupApp(app: INestApplication): void {
 }
 ```
 - `main.ts` and the e2e tests both call this, so the tests check the same app that runs in production.
-- `helmet()` adds headers like `X-Content-Type-Options: nosniff` ([helmet docs](https://docs.nestjs.com/security/helmet)).
+- `helmet()` adds headers like `X-Content-Type-Options: nosniff` and `Strict-Transport-Security` (HSTS: "only use HTTPS for this site") ([helmet docs](https://docs.nestjs.com/security/helmet)).
 - CORS allows one exact origin, never `*` ([CORS docs](https://docs.nestjs.com/security/cors)).
 - `enableShutdownHooks()` lets the app close cleanly on `Ctrl+C` or when the server sends a stop signal.
 
@@ -108,7 +108,7 @@ None.
 
 ## Security notes
 - Listens on `127.0.0.1` by default.
-- Security headers on every response (helmet).
+- Security headers on every response (helmet), with e2e tests guarding `nosniff` and HSTS.
 - Browsers allow only `WEB_ORIGIN` (CORS).
 - Unknown routes return a JSON `404` without a stack trace.
 - Observe keys live only in the git-ignored `.env`.
@@ -124,7 +124,7 @@ None.
 | Command | What runs |
 |---|---|
 | `npm test` | 4 unit tests for the env schema |
-| `npm run test:e2e` | 5 e2e tests: health, headers, CORS allow, CORS deny, JSON 404 |
+| `npm run test:e2e` | 6 e2e tests: health, nosniff, HSTS, CORS allow, CORS deny, JSON 404 |
 | `npm run typecheck`, `npm run lint`, `npm run build` | Gates |
 | `npm run start:prod` (after the build) | The compiled app serves `/health` |
 
@@ -137,5 +137,5 @@ None.
 
 ## Try it yourself
 1. Add `LOG_LEVEL` to the env schema (`'debug' | 'info' | 'warn' | 'error'`, default `'info'`). Test first: the default applies, and `LOG_LEVEL=loud` fails and names `LOG_LEVEL`.
-2. Add an e2e test that `/health` responses include `Strict-Transport-Security` (helmet sets it). Read helmet's docs to see what it does.
+2. ✅ Done: an e2e test now checks that responses include `Strict-Transport-Security`. To see it guard something, turn HSTS off with `helmet({ strictTransportSecurity: false })` and watch only that test go red.
 3. In PowerShell, run `$env:PORT="abc"`, then `npm run start:dev`, and read the error. Clean up with `Remove-Item Env:PORT`.
