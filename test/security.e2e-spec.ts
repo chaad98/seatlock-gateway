@@ -56,4 +56,10 @@ describe('security baseline', () => {
     expect(res.headers['content-type']).toMatch(/application\/json/);
     expect(res.body).not.toHaveProperty('stack');
   });
+
+  it('tells browsers to use HTTPS only (HSTS)', async () => {
+    const res = await request(app.getHttpServer()).get('/health');
+
+    expect(res.headers['strict-transport-security']).toMatch(/max-age=\d+/);
+  });
 });
